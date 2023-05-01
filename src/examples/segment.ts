@@ -1,4 +1,5 @@
-let analytics: any = {};
+// @ts-expect-error
+import analytics from "@segment/analytics-next";
 
 analytics.track("User Signed Up", {
   plan: "Pro",

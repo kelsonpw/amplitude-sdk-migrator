@@ -1,9 +1,20 @@
-// segment-to-amplitude-codemod.ts
-import { Transform, JSCodeshift } from "jscodeshift";
+// segment-to-amplitude.ts
+import { Transform } from "jscodeshift";
+import { AMPLITUDE_IMPORT_DECLARTION } from "./helpers";
+
+export const parser = "tsx";
 
 const transform: Transform = (file, api) => {
-  const j: JSCodeshift = api.jscodeshift;
+  const j = api.jscodeshift;
   const root = j(file.source);
+
+  root
+    .find(j.ImportDeclaration, {
+      source: {
+        value: "@segment/analytics-next",
+      },
+    })
+    .replaceWith(() => AMPLITUDE_IMPORT_DECLARTION);
 
   // Find all Segment event tracking calls (analytics.track)
   root
