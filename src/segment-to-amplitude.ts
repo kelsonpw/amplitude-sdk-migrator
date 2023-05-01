@@ -25,19 +25,9 @@ const transform: Transform = (file, api) => {
         property: { type: "Identifier", name: "track" },
       },
     })
-    .forEach((path) => {
-      const memberExpression = path.node.callee;
-      if (memberExpression.type === "MemberExpression") {
-        // Replace the callee object name from 'analytics' to 'amplitude'
-        if (memberExpression.object.type === "Identifier") {
-          memberExpression.object.name = "amplitude";
-        }
-        // Change the callee property name from 'track' to 'logEvent'
-        if (memberExpression.property.type === "Identifier") {
-          memberExpression.property.name = "logEvent";
-        }
-      }
-    });
+    .replaceWith(({ node }) =>
+      j.callExpression(j.identifier("track"), node.arguments)
+    );
 
   return root.toSource();
 };
